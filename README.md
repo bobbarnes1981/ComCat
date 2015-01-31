@@ -1,2 +1,2 @@
-# comcat
+# ComCat
 Comic Catalogue
