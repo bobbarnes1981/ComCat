@@ -97,7 +97,7 @@ class Ui(tkinter.Tk):
 		self.tree_comics_populate()
 		
 	def menu_tree_del_issue(self):
-		if tkinter.messagebox.askquestion('Delete', 'Are You Sure?', icon='warning') == 'yes':
+		if tkinter.messagebox.askquestion('Delete', 'Delete issue #{0}, are You Sure?'.format(self.tree_comics.selected_item().number), icon='warning') == 'yes':
 			self.manager.del_issue(self.tree_comics.selected_item().id)
 			self.update_issues()
 	
@@ -105,12 +105,16 @@ class Ui(tkinter.Tk):
 		popup = Ui_Add_Issue(self, self.manager, self.tree_comics.selected_item().id)
 		popup.bind('<Destroy>', self.ui_add_issue_destroy)
 
+	def menu_tree_cop_issue(self):
+		popup = Ui_Add_Issue(self, self.manager, self.tree_comics.selected_item().id, copy=True)
+		popup.bind('<Destroy>', self.ui_add_issue_destroy)
+	
 	def ui_add_issue_destroy(self, event):
 		if isinstance(event.widget, Ui_Add_Issue):
 			self.update_issues()
 	
 	def menu_tree_del_comic(self):
-		if tkinter.messagebox.askquestion('Delete', 'Are You Sure?', icon='warning') == 'yes':
+		if tkinter.messagebox.askquestion('Delete', 'Delete comic \'{0}\', are You Sure?'.format(self.tree_comics.selected_item().cname), icon='warning') == 'yes':
 			self.manager.del_comic(self.tree_comicx.selected_item().cid)
 			self.update_issues()
 	
@@ -126,7 +130,7 @@ class Ui(tkinter.Tk):
 		self.update_issues()
 		
 	def menu_tree_del_volume(self):
-		if tkinter.messagebox.askquestion('Delete', 'Are You Sure?', icon='warning') == 'yes':
+		if tkinter.messagebox.askquestion('Delete', 'Delete volume \'{0}\', are You Sure?'.format(self.tree_comics.selected_item().vname), icon='warning') == 'yes':
 			self.manager.del_volume(self.tree_comics.selected_item().vid)
 			self.update_issues()
 	
@@ -161,7 +165,7 @@ class Ui(tkinter.Tk):
 """This class is a popup for handling adding a comic issue"""
 class Ui_Add_Issue(tkinter.Toplevel):
 
-	def __init__(self, parent, manager, issue_id = None):
+	def __init__(self, parent, manager, issue_id = None, copy = False):
 		tkinter.Toplevel.__init__(self, parent)
 		self.parent = parent
 		self.manager = manager
@@ -269,6 +273,8 @@ class Ui_Add_Issue(tkinter.Toplevel):
 			self.entry_issue.insert(0, issue.number)
 			self.entry_variant.insert(0, issue.variant)
 			self.personcollection_people.set_relationships(self.manager.get_related_people(self.issue_id))
+			if copy == True:
+				self.issue_id = None
 	
 	# buttons
 	
